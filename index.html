@@ -91,27 +91,31 @@
     
     .view-toggle {
       display: flex;
-      gap: 8px;
+      gap: 4px;
       background: #fff;
-      padding: 6px;
+      padding: 5px;
       border-radius: 12px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      width: 100%;
     }
-    
+
     .toggle-btn {
       display: flex;
       align-items: center;
-      gap: 6px;
-      padding: 10px 16px;
+      justify-content: center;
+      gap: 4px;
+      flex: 1;
+      padding: 10px 8px;
       border: none;
       border-radius: 8px;
       background: transparent;
       color: #8B7E74;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       cursor: pointer;
       transition: all 0.2s ease;
       font-family: inherit;
+      white-space: nowrap;
     }
     
     .toggle-btn.active {
@@ -618,6 +622,282 @@
       from { height: 0; }
     }
     
+    /* Reminders View */
+    .reminders-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .reminders-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: #8B7E74;
+      font-size: 15px;
+    }
+
+    .reminders-empty-icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    .reminder-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px 18px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      animation: fadeInUp 0.4s ease forwards;
+      opacity: 0;
+    }
+
+    .reminder-card.disabled {
+      opacity: 0.5;
+    }
+
+    .reminder-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .reminder-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: #3D3229;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .reminder-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .reminder-time-badge {
+      font-size: 13px;
+      font-weight: 600;
+      color: #E07A5F;
+    }
+
+    .reminder-recurrence-badge {
+      font-size: 11px;
+      font-weight: 600;
+      color: #8B7E74;
+      background: #F5EDE8;
+      padding: 2px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .reminder-toggle {
+      position: relative;
+      width: 44px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+
+    .reminder-toggle input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #E8E2DD;
+      border-radius: 26px;
+      transition: 0.2s;
+    }
+
+    .toggle-slider:before {
+      content: "";
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background: #fff;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+
+    .reminder-toggle input:checked + .toggle-slider {
+      background: #E07A5F;
+    }
+
+    .reminder-toggle input:checked + .toggle-slider:before {
+      transform: translateX(18px);
+    }
+
+    .reminder-delete-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      border: none;
+      background: #F5EDE8;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #8B7E74;
+      font-size: 14px;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .reminder-delete-btn:active {
+      transform: scale(0.9);
+      background: #f0ddd6;
+    }
+
+    .add-reminder-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 16px;
+      border-radius: 12px;
+      border: 2px dashed #E8E2DD;
+      background: transparent;
+      color: #8B7E74;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .add-reminder-btn:active {
+      transform: scale(0.97);
+      border-color: #E07A5F;
+      color: #E07A5F;
+    }
+
+    .recurrence-select {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .recurrence-btn {
+      padding: 12px 10px;
+      border-radius: 10px;
+      border: 2px solid #E8E2DD;
+      background: transparent;
+      color: #5D5348;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      text-align: center;
+    }
+
+    .recurrence-btn.selected {
+      border-color: #E07A5F;
+      background: #FDF0ED;
+      color: #E07A5F;
+    }
+
+    .recurrence-btn:active {
+      transform: scale(0.95);
+    }
+
+    .day-picker {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .day-pick-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 2px solid #E8E2DD;
+      background: transparent;
+      color: #5D5348;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .day-pick-btn.selected {
+      border-color: #E07A5F;
+      background: #FDF0ED;
+      color: #E07A5F;
+    }
+
+    .day-pick-btn:active {
+      transform: scale(0.95);
+    }
+
+    .interval-select {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .interval-btn {
+      padding: 10px 6px;
+      border-radius: 10px;
+      border: 2px solid #E8E2DD;
+      background: transparent;
+      color: #5D5348;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+      text-align: center;
+    }
+
+    .interval-btn.selected {
+      border-color: #E07A5F;
+      background: #FDF0ED;
+      color: #E07A5F;
+    }
+
+    .interval-btn:active {
+      transform: scale(0.95);
+    }
+
+    .interval-custom-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .interval-custom-row .input {
+      flex: 1;
+    }
+
+    .interval-custom-row span {
+      font-size: 14px;
+      color: #5D5348;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #8B7E74;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: -8px;
+    }
+
     /* Install prompt */
     .install-prompt {
       position: fixed;
@@ -695,6 +975,11 @@
     let entries = {};
     let view = 'calendar';
     let newEntryCategory = 'workout';
+    let reminders = [];
+    let newReminderRecurrence = 'daily';
+    let newReminderWeekDays = [];
+    let newReminderInterval = 60;
+    const firedReminders = new Set();
 
     // Load/Save
     function loadEntries() {
@@ -704,6 +989,15 @@
 
     function saveEntries() {
       localStorage.setItem('wellness-entries', JSON.stringify(entries));
+    }
+
+    function loadReminders() {
+      const saved = localStorage.getItem('wellness-reminders');
+      if (saved) reminders = JSON.parse(saved);
+    }
+
+    function saveReminders() {
+      localStorage.setItem('wellness-reminders', JSON.stringify(reminders));
     }
 
     // Helpers
@@ -790,10 +1084,13 @@
             <button class="toggle-btn ${view === 'stats' ? 'active' : ''}" onclick="setView('stats')">
               📊 Progress
             </button>
+            <button class="toggle-btn ${view === 'reminders' ? 'active' : ''}" onclick="setView('reminders')">
+              ⏰ Reminders
+            </button>
           </div>
         </header>
 
-        ${view === 'calendar' ? renderCalendar() : renderStats()}
+        ${view === 'calendar' ? renderCalendar() : view === 'stats' ? renderStats() : renderReminders()}
       `;
     }
 
@@ -899,6 +1196,132 @@
                 </div>
               `;
             }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function formatIntervalLabel(mins) {
+      if (mins < 60) return `Every ${mins} min`;
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      if (m === 0) return `Every ${h}h`;
+      return `Every ${h}h ${m}m`;
+    }
+
+    function getRecurrenceLabel(reminder) {
+      if (reminder.recurrence === 'interval') return formatIntervalLabel(reminder.intervalMinutes);
+      if (reminder.recurrence === 'daily') return 'Every day';
+      if (reminder.recurrence === 'monthly') return `Monthly on the ${reminder.monthDay}${reminder.monthDay === 1 ? 'st' : reminder.monthDay === 2 ? 'nd' : reminder.monthDay === 3 ? 'rd' : 'th'}`;
+      if (reminder.recurrence === 'weekly') {
+        const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        return reminder.weekDays.map(d => dayNames[d]).join(', ');
+      }
+      return '';
+    }
+
+    function renderReminders() {
+      return `
+        <div class="reminders-container">
+          ${reminders.length === 0 ? `
+            <div class="reminders-empty">
+              <div class="reminders-empty-icon">⏰</div>
+              <p>No reminders yet</p>
+              <p style="font-size: 13px; margin-top: 4px;">Create one to stay on track!</p>
+            </div>
+          ` : reminders.map((r, i) => `
+            <div class="reminder-card ${r.enabled ? '' : 'disabled'}" style="animation-delay: ${i * 60}ms">
+              <div class="reminder-info">
+                <div class="reminder-title">${r.title}</div>
+                <div class="reminder-meta">
+                  <span class="reminder-time-badge">${r.recurrence === 'interval' ? `from ${formatTime12(r.startTime)}` : formatTime12(r.time)}</span>
+                  <span class="reminder-recurrence-badge">${getRecurrenceLabel(r)}</span>
+                </div>
+              </div>
+              <label class="reminder-toggle">
+                <input type="checkbox" ${r.enabled ? 'checked' : ''} onchange="toggleReminder(${r.id})">
+                <span class="toggle-slider"></span>
+              </label>
+              <button class="reminder-delete-btn" onclick="deleteReminder(${r.id})">✕</button>
+            </div>
+          `).join('')}
+
+          <button class="add-reminder-btn" onclick="openReminderModal()">+ Add Reminder</button>
+        </div>
+      `;
+    }
+
+    function formatTime12(time) {
+      const [h, m] = time.split(':').map(Number);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      const hour = h % 12 || 12;
+      return `${hour}:${String(m).padStart(2, '0')} ${ampm}`;
+    }
+
+    function renderReminderModal() {
+      const dayLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+      return `
+        <div class="modal-overlay" onclick="closeReminderModal()">
+          <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+              <h3 class="modal-title">New Reminder</h3>
+              <button class="close-btn" onclick="closeReminderModal()">✕</button>
+            </div>
+
+            <div class="modal-body">
+              <span class="form-label">Title</span>
+              <input type="text" id="reminder-title" class="input" placeholder="e.g., Drink water, Take vitamins">
+
+              <span class="form-label">Repeat</span>
+              <div class="recurrence-select">
+                <button class="recurrence-btn ${newReminderRecurrence === 'interval' ? 'selected' : ''}" onclick="setRecurrence('interval')">Interval</button>
+                <button class="recurrence-btn ${newReminderRecurrence === 'daily' ? 'selected' : ''}" onclick="setRecurrence('daily')">Daily</button>
+                <button class="recurrence-btn ${newReminderRecurrence === 'weekly' ? 'selected' : ''}" onclick="setRecurrence('weekly')">Weekly</button>
+                <button class="recurrence-btn ${newReminderRecurrence === 'monthly' ? 'selected' : ''}" onclick="setRecurrence('monthly')">Monthly</button>
+              </div>
+
+              ${newReminderRecurrence === 'interval' ? `
+                <span class="form-label">Every</span>
+                <div class="interval-select">
+                  <button class="interval-btn ${newReminderInterval === 15 ? 'selected' : ''}" onclick="setInterval_(15)">15 min</button>
+                  <button class="interval-btn ${newReminderInterval === 30 ? 'selected' : ''}" onclick="setInterval_(30)">30 min</button>
+                  <button class="interval-btn ${newReminderInterval === 60 ? 'selected' : ''}" onclick="setInterval_(60)">1 hour</button>
+                  <button class="interval-btn ${newReminderInterval === 120 ? 'selected' : ''}" onclick="setInterval_(120)">2 hours</button>
+                  <button class="interval-btn ${newReminderInterval === 180 ? 'selected' : ''}" onclick="setInterval_(180)">3 hours</button>
+                  <button class="interval-btn ${newReminderInterval === 0 ? 'selected' : ''}" onclick="setInterval_(0)">Custom</button>
+                </div>
+                ${newReminderInterval === 0 ? `
+                  <span class="form-label">Custom interval</span>
+                  <div class="interval-custom-row">
+                    <input type="number" id="reminder-custom-hours" class="input" min="0" max="23" value="1" placeholder="0">
+                    <span>hours</span>
+                    <input type="number" id="reminder-custom-mins" class="input" min="0" max="59" value="0" placeholder="0">
+                    <span>min</span>
+                  </div>
+                ` : ''}
+                <span class="form-label">Starting at</span>
+                <input type="time" id="reminder-start-time" class="input" value="08:00">
+              ` : `
+                <span class="form-label">Time</span>
+                <input type="time" id="reminder-time" class="input" value="09:00">
+              `}
+
+              ${newReminderRecurrence === 'weekly' ? `
+                <span class="form-label">Days of the week</span>
+                <div class="day-picker">
+                  ${dayLabels.map((label, i) => `
+                    <button class="day-pick-btn ${newReminderWeekDays.includes(i) ? 'selected' : ''}" onclick="toggleWeekDay(${i})">${label}</button>
+                  `).join('')}
+                </div>
+              ` : ''}
+
+              ${newReminderRecurrence === 'monthly' ? `
+                <span class="form-label">Day of the month</span>
+                <input type="number" id="reminder-monthday" class="input" min="1" max="31" value="1" placeholder="1-31">
+              ` : ''}
+
+              <button class="add-btn" onclick="addReminder()">✓ Save Reminder</button>
+            </div>
           </div>
         </div>
       `;
@@ -1014,6 +1437,169 @@
       render();
     }
 
+    // Reminder Actions
+    function openReminderModal() {
+      newReminderRecurrence = 'daily';
+      newReminderWeekDays = [];
+      newReminderInterval = 60;
+      document.body.insertAdjacentHTML('beforeend', renderReminderModal());
+      setTimeout(() => document.getElementById('reminder-title')?.focus(), 100);
+    }
+
+    function closeReminderModal() {
+      document.querySelector('.modal-overlay')?.remove();
+    }
+
+    function setRecurrence(type) {
+      newReminderRecurrence = type;
+      rerenderReminderModal();
+    }
+
+    function setInterval_(mins) {
+      newReminderInterval = mins;
+      rerenderReminderModal();
+    }
+
+    function rerenderReminderModal() {
+      const overlay = document.querySelector('.modal-overlay');
+      if (overlay) {
+        const title = document.getElementById('reminder-title')?.value || '';
+        const time = document.getElementById('reminder-time')?.value || '09:00';
+        const startTime = document.getElementById('reminder-start-time')?.value || '08:00';
+        const monthDay = document.getElementById('reminder-monthday')?.value || '1';
+        const customH = document.getElementById('reminder-custom-hours')?.value || '1';
+        const customM = document.getElementById('reminder-custom-mins')?.value || '0';
+        overlay.outerHTML = renderReminderModal();
+        document.getElementById('reminder-title').value = title;
+        if (document.getElementById('reminder-time')) {
+          document.getElementById('reminder-time').value = time;
+        }
+        if (document.getElementById('reminder-start-time')) {
+          document.getElementById('reminder-start-time').value = startTime;
+        }
+        if (document.getElementById('reminder-monthday')) {
+          document.getElementById('reminder-monthday').value = monthDay;
+        }
+        if (document.getElementById('reminder-custom-hours')) {
+          document.getElementById('reminder-custom-hours').value = customH;
+        }
+        if (document.getElementById('reminder-custom-mins')) {
+          document.getElementById('reminder-custom-mins').value = customM;
+        }
+      }
+    }
+
+    function toggleWeekDay(day) {
+      if (newReminderWeekDays.includes(day)) {
+        newReminderWeekDays = newReminderWeekDays.filter(d => d !== day);
+      } else {
+        newReminderWeekDays.push(day);
+        newReminderWeekDays.sort();
+      }
+      rerenderReminderModal();
+    }
+
+    function addReminder() {
+      const title = document.getElementById('reminder-title')?.value?.trim();
+      if (!title) return;
+
+      const isInterval = newReminderRecurrence === 'interval';
+      const time = isInterval ? null : document.getElementById('reminder-time')?.value;
+      if (!isInterval && !time) return;
+
+      let intervalMinutes = newReminderInterval;
+      if (isInterval && newReminderInterval === 0) {
+        const ch = parseInt(document.getElementById('reminder-custom-hours')?.value || '0');
+        const cm = parseInt(document.getElementById('reminder-custom-mins')?.value || '0');
+        intervalMinutes = ch * 60 + cm;
+      }
+      if (isInterval && intervalMinutes <= 0) return;
+
+      const startTime = isInterval ? (document.getElementById('reminder-start-time')?.value || '08:00') : null;
+
+      const reminder = {
+        id: Date.now(),
+        title,
+        time,
+        recurrence: newReminderRecurrence,
+        intervalMinutes: isInterval ? intervalMinutes : null,
+        startTime,
+        weekDays: newReminderRecurrence === 'weekly' ? [...newReminderWeekDays] : [],
+        monthDay: newReminderRecurrence === 'monthly' ? parseInt(document.getElementById('reminder-monthday')?.value || '1') : null,
+        enabled: true
+      };
+
+      reminders.push(reminder);
+      saveReminders();
+      closeReminderModal();
+      render();
+    }
+
+    function toggleReminder(id) {
+      const r = reminders.find(r => r.id === id);
+      if (r) {
+        r.enabled = !r.enabled;
+        saveReminders();
+        render();
+      }
+    }
+
+    function deleteReminder(id) {
+      reminders = reminders.filter(r => r.id !== id);
+      saveReminders();
+      render();
+    }
+
+    // Notification System
+    function requestNotificationPermission() {
+      if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+      }
+    }
+
+    function shouldReminderFire(reminder, now) {
+      if (!reminder.enabled) return false;
+
+      if (reminder.recurrence === 'interval') {
+        const [sh, sm] = reminder.startTime.split(':').map(Number);
+        const startMins = sh * 60 + sm;
+        const nowMins = now.getHours() * 60 + now.getMinutes();
+        if (nowMins < startMins) return false;
+        return (nowMins - startMins) % reminder.intervalMinutes === 0;
+      }
+
+      const [h, m] = reminder.time.split(':').map(Number);
+      if (now.getHours() !== h || now.getMinutes() !== m) return false;
+
+      if (reminder.recurrence === 'daily') return true;
+      if (reminder.recurrence === 'weekly') return reminder.weekDays.includes(now.getDay());
+      if (reminder.recurrence === 'monthly') return now.getDate() === reminder.monthDay;
+      return false;
+    }
+
+    function checkReminders() {
+      if (!('Notification' in window) || Notification.permission !== 'granted') return;
+
+      const now = new Date();
+      const minuteKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}`;
+
+      reminders.forEach(r => {
+        const fireKey = `${r.id}-${minuteKey}`;
+        if (!firedReminders.has(fireKey) && shouldReminderFire(r, now)) {
+          firedReminders.add(fireKey);
+          new Notification('Wellness Journal', {
+            body: `⏰ ${r.title}`,
+            icon: 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2720%27 fill=%27%23E07A5F%27/%3E%3Ctext x=%2750%27 y=%2765%27 font-size=%2750%27 text-anchor=%27middle%27 fill=%27white%27%3E🔥%3C/text%3E%3C/svg%3E'
+          });
+        }
+      });
+    }
+
+    function startReminderChecker() {
+      checkReminders();
+      setInterval(checkReminders, 60000);
+    }
+
     // PWA Install
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -1067,7 +1653,10 @@
 
     // Init
     loadEntries();
+    loadReminders();
     render();
+    requestNotificationPermission();
+    startReminderChecker();
   </script>
 </body>
 </html>
