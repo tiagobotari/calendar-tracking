@@ -889,6 +889,112 @@
       white-space: nowrap;
     }
 
+    .notification-banner {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+
+    .notification-banner-icon {
+      font-size: 20px;
+    }
+
+    .notification-banner-text {
+      flex: 1;
+      font-size: 13px;
+      color: #5D5348;
+      line-height: 1.4;
+    }
+
+    .notification-banner-text strong {
+      display: block;
+      font-size: 14px;
+      color: #3D3229;
+      margin-bottom: 2px;
+    }
+
+    .enable-notif-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: none;
+      background: #E07A5F;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: transform 0.2s;
+    }
+
+    .enable-notif-btn:active {
+      transform: scale(0.95);
+    }
+
+    .notif-status-ok {
+      background: #EFF6F2;
+    }
+
+    .notif-status-off {
+      background: #FDF0ED;
+    }
+
+    .in-app-alert {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 2000;
+      animation: slideDown 0.3s ease;
+      border-left: 4px solid #E07A5F;
+    }
+
+    .in-app-alert-text {
+      flex: 1;
+    }
+
+    .in-app-alert-title {
+      font-weight: 600;
+      color: #3D3229;
+      font-size: 15px;
+    }
+
+    .in-app-alert-body {
+      font-size: 13px;
+      color: #8B7E74;
+      margin-top: 2px;
+    }
+
+    .in-app-alert-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: #F5EDE8;
+      cursor: pointer;
+      font-size: 14px;
+      color: #8B7E74;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes slideDown {
+      from { transform: translateY(-100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
     .form-label {
       font-size: 13px;
       font-weight: 600;
@@ -1220,9 +1326,59 @@
       return '';
     }
 
+    function getNotifBanner() {
+      const supported = 'Notification' in window;
+      const testBtn = `<button class="enable-notif-btn" onclick="testAlert()" style="background:#81B29A">Test</button>`;
+      if (!supported) {
+        return `
+          <div class="notification-banner notif-status-off">
+            <span class="notification-banner-icon">📱</span>
+            <div class="notification-banner-text">
+              <strong>Browser notifications not supported</strong>
+              In-app alerts with sound will still work.
+            </div>
+            ${testBtn}
+          </div>`;
+      }
+      if (Notification.permission === 'granted') {
+        return `
+          <div class="notification-banner notif-status-ok">
+            <span class="notification-banner-icon">✅</span>
+            <div class="notification-banner-text">
+              <strong>Notifications enabled</strong>
+              You'll receive alerts when reminders are due.
+            </div>
+            ${testBtn}
+          </div>`;
+      }
+      if (Notification.permission === 'denied') {
+        return `
+          <div class="notification-banner notif-status-off">
+            <span class="notification-banner-icon">🔕</span>
+            <div class="notification-banner-text">
+              <strong>Notifications blocked</strong>
+              Check browser settings. In-app alerts will still work.
+            </div>
+            ${testBtn}
+          </div>`;
+      }
+      return `
+        <div class="notification-banner notif-status-off">
+          <span class="notification-banner-icon">🔔</span>
+          <div class="notification-banner-text">
+            <strong>Enable notifications</strong>
+            Get alerted when your reminders are due.
+          </div>
+          <button class="enable-notif-btn" onclick="enableNotifications()">Enable</button>
+          ${testBtn}
+        </div>`;
+    }
+
     function renderReminders() {
       return `
         <div class="reminders-container">
+          ${getNotifBanner()}
+
           ${reminders.length === 0 ? `
             <div class="reminders-empty">
               <div class="reminders-empty-icon">⏰</div>
@@ -1551,10 +1707,62 @@
     }
 
     // Notification System
-    function requestNotificationPermission() {
+    function enableNotifications() {
       if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission();
+        Notification.requestPermission().then(() => render());
       }
+    }
+
+    function testAlert() {
+      showInAppAlert('This is a test reminder!');
+      try {
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('Wellness Journal', { body: 'Test reminder working!' });
+        }
+      } catch (e) {}
+    }
+
+    function showInAppAlert(title) {
+      // Remove existing alerts
+      document.querySelectorAll('.in-app-alert').forEach(el => el.remove());
+
+      const alert = document.createElement('div');
+      alert.className = 'in-app-alert';
+      alert.innerHTML = `
+        <span style="font-size: 24px">⏰</span>
+        <div class="in-app-alert-text">
+          <div class="in-app-alert-title">Reminder</div>
+          <div class="in-app-alert-body">${title}</div>
+        </div>
+        <button class="in-app-alert-close" onclick="this.parentElement.remove()">✕</button>
+      `;
+      document.body.appendChild(alert);
+
+      // Play a short beep using Web Audio API
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.frequency.value = 660;
+        gain.gain.value = 0.3;
+        osc.start();
+        osc.stop(ctx.currentTime + 0.2);
+        setTimeout(() => {
+          const osc2 = ctx.createOscillator();
+          const gain2 = ctx.createGain();
+          osc2.connect(gain2);
+          gain2.connect(ctx.destination);
+          osc2.frequency.value = 880;
+          gain2.gain.value = 0.3;
+          osc2.start();
+          osc2.stop(ctx.currentTime + 0.3);
+        }, 250);
+      } catch (e) {}
+
+      // Auto-dismiss after 10 seconds
+      setTimeout(() => alert.remove(), 10000);
     }
 
     function shouldReminderFire(reminder, now) {
@@ -1578,8 +1786,6 @@
     }
 
     function checkReminders() {
-      if (!('Notification' in window) || Notification.permission !== 'granted') return;
-
       const now = new Date();
       const minuteKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}-${now.getHours()}-${now.getMinutes()}`;
 
@@ -1587,17 +1793,27 @@
         const fireKey = `${r.id}-${minuteKey}`;
         if (!firedReminders.has(fireKey) && shouldReminderFire(r, now)) {
           firedReminders.add(fireKey);
-          new Notification('Wellness Journal', {
-            body: `⏰ ${r.title}`,
-            icon: 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2720%27 fill=%27%23E07A5F%27/%3E%3Ctext x=%2750%27 y=%2765%27 font-size=%2750%27 text-anchor=%27middle%27 fill=%27white%27%3E🔥%3C/text%3E%3C/svg%3E'
-          });
+
+          // Always show in-app alert
+          showInAppAlert(r.title);
+
+          // Also send browser notification if available
+          try {
+            if ('Notification' in window && Notification.permission === 'granted') {
+              new Notification('Wellness Journal', {
+                body: r.title,
+                icon: 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2720%27 fill=%27%23E07A5F%27/%3E%3Ctext x=%2750%27 y=%2765%27 font-size=%2750%27 text-anchor=%27middle%27 fill=%27white%27%3E🔥%3C/text%3E%3C/svg%3E'
+              });
+            }
+          } catch (e) {}
         }
       });
     }
 
     function startReminderChecker() {
+      // Check every 10 seconds to avoid missing a minute due to drift
       checkReminders();
-      setInterval(checkReminders, 60000);
+      setInterval(checkReminders, 10000);
     }
 
     // PWA Install
@@ -1655,7 +1871,6 @@
     loadEntries();
     loadReminders();
     render();
-    requestNotificationPermission();
     startReminderChecker();
   </script>
 </body>
