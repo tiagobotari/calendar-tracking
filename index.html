@@ -1353,13 +1353,16 @@
       }
       if (Notification.permission === 'denied') {
         return `
-          <div class="notification-banner notif-status-off">
+          <div class="notification-banner notif-status-off" style="flex-wrap: wrap;">
             <span class="notification-banner-icon">🔕</span>
             <div class="notification-banner-text">
               <strong>Notifications blocked</strong>
-              Check browser settings. In-app alerts will still work.
+              To enable, tap the lock/tune icon in your browser's address bar, then allow Notifications. On Android Chrome: tap ⋮ &gt; Settings &gt; Site settings &gt; Notifications.
             </div>
-            ${testBtn}
+            <div style="display:flex; gap:8px; width:100%; margin-top:4px; padding-left:32px;">
+              <button class="enable-notif-btn" onclick="tryReenableNotifications()">Try Again</button>
+              ${testBtn}
+            </div>
           </div>`;
       }
       return `
@@ -1710,6 +1713,20 @@
     function enableNotifications() {
       if ('Notification' in window && Notification.permission === 'default') {
         Notification.requestPermission().then(() => render());
+      }
+    }
+
+    function tryReenableNotifications() {
+      if ('Notification' in window) {
+        // If user changed setting in browser, permission may now be 'default' again
+        if (Notification.permission === 'default') {
+          Notification.requestPermission().then(() => render());
+        } else if (Notification.permission === 'denied') {
+          // Can't re-prompt, but show a helpful message
+          showInAppAlert('Open your browser settings to allow notifications for this site, then tap "Try Again".');
+        } else {
+          render();
+        }
       }
     }
 
